@@ -4,6 +4,9 @@
 zabbix-db:
   container_name: zabbix-db
   image: zabbix/zabbix-db-mariadb
+  log_driver: "syslog"
+  log_opt:
+    tag: "zabbix-db"
   restart: always
   volumes:
     - /opt/docker_containers/zabbix-db/data:/var/lib/mysql
@@ -17,6 +20,9 @@ zabbix-db:
 zabbix:
   container_name: zabbix
   image: zabbix/zabbix-3.0
+  log_driver: "syslog"
+  log_opt:
+    tag: "zabbix-server"
   restart: always
   ports:
     - 80:80
