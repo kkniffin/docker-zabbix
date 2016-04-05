@@ -16,7 +16,7 @@ zabbix-db:
 
 zabbix:
   container_name: zabbix
-  image: zabbix/zabbix-server-3.0:dev
+  image: zabbix/zabbix-3.0
   restart: always
   ports:
     - 80:80
