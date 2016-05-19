@@ -24,6 +24,8 @@ zabbix:
   log_opt:
     tag: "zabbix-server"
   restart: always
+  volumes:
+    - /opt/docker_containers/zabbix/alertscripts:/usr/local/share/zabbix/alertscripts
   ports:
     - 80:80
     - 10051:10051
