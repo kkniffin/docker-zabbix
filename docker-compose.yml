@@ -19,7 +19,8 @@ zabbix-db:
 
 zabbix:
   container_name: zabbix
-  image: zabbix/zabbix-3.0
+  #image: zabbix/zabbix-3.0
+  build: ./build/zabbix
   log_driver: "syslog"
   log_opt:
     tag: "zabbix-server"
