@@ -1,38 +1,42 @@
-# Zabbix
-# mkdir -p /opt/docker_containers/zabbix-db/data
+version: '2'
+services:
 
-zabbix-db:
-  container_name: zabbix-db
-  image: zabbix/zabbix-db-mariadb
-  log_driver: "syslog"
-  log_opt:
-    tag: "zabbix-db"
-  restart: always
-  volumes:
-    - /opt/docker_containers/zabbix-db/data:/var/lib/mysql
-  ports:
-    - 3306:3306
-  environment:
-    - MARIADB_USER=zabbix
-    - MARIADB_PASS=my_password
-    - DB_innodb_buffer_pool_size=768M
+  # Zabbix
+  # mkdir -p /opt/docker_containers/zabbix-db/data
+  zabbix-db:
+    container_name: zabbix-db
+    image: monitoringartist/zabbix-db-mariadb
+    restart: always
+    volumes:
+      - ../docker-data/zabbix-db:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_USER: zabbix
+      MARIADB_PASS: my_password
+      DB_innodb_buffer_pool_size: 768M
+    networks:
+      - main
 
-zabbix:
-  container_name: zabbix
-  #image: zabbix/zabbix-3.0
-  build: ./build/zabbix
-  log_driver: "syslog"
-  log_opt:
-    tag: "zabbix-server"
-  restart: always
-  volumes:
-    - /opt/docker_containers/zabbix/alertscripts:/usr/local/share/zabbix/alertscripts
-  ports:
-    - 80:80
-    - 10051:10051
-  environment:
-    - ZS_DBHost=zabbix.db
-    - ZS_DBUser=zabbix
-    - ZS_DBPassword=my_password
-  links:
-    - zabbix-db:zabbix.db
+  zabbix:
+    container_name: zabbix
+    build: ./build/zabbix
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 80:80
+      - 10051:10051
+    depends_on:
+      - zabbix-db
+    environment:
+      ZS_DBHost: zabbix.db
+      ZS_DBUser: zabbix
+      ZS_DBPassword: my_password
+    links:
+      - zabbix-db:zabbix.db
+    networks:
+      - main
+
+networks:
+  main:
